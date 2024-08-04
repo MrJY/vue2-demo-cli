@@ -26,9 +26,7 @@ function computeIndexes(slots, children, isTransition, footerOffset) {
 
     const elmFromNodes = slots.map((elt) => elt.elm);
     const footerIndex = children.length - footerOffset;
-    const rawIndexes = [...children].map((elt, idx) =>
-        idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt),
-    );
+    const rawIndexes = [...children].map((elt, idx) => (idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)));
     return isTransition ? rawIndexes.filter((ind) => ind !== -1) : rawIndexes;
 }
 
@@ -104,18 +102,8 @@ function getComponentAttributes($attrs, componentData) {
 }
 
 const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-const eventsToEmit = [
-    'Choose',
-    'Unchoose',
-    'Sort',
-    'Filter',
-    'Clone',
-    'Select',
-    'Deselect',
-];
-const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(
-    (evt) => 'on' + evt,
-);
+const eventsToEmit = ['Choose', 'Unchoose', 'Sort', 'Filter', 'Clone', 'Select', 'Deselect'];
+const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map((evt) => 'on' + evt);
 let draggingElement = null;
 
 const props = {
@@ -191,22 +179,16 @@ const draggableComponent = {
     render(h) {
         const slots = this.$slots.default;
         this.transitionMode = isTransition(slots);
-        const { children, headerOffset, footerOffset } =
-            computeChildrenAndOffsets(slots, this.$slots, this.$scopedSlots);
+        const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(slots, this.$slots, this.$scopedSlots);
         this.headerOffset = headerOffset;
         this.footerOffset = footerOffset;
-        const attributes = getComponentAttributes(
-            this.$attrs,
-            this.componentData,
-        );
+        const attributes = getComponentAttributes(this.$attrs, this.componentData);
         return h(this.getTag(), attributes, children);
     },
 
     created() {
         if (this.list !== null && this.value !== null) {
-            console.error(
-                'Value and list props are mutually exclusive! Please set one or another.',
-            );
+            console.error('Value and list props are mutually exclusive! Please set one or another.');
         }
 
         if (this.element !== 'div') {
@@ -229,9 +211,7 @@ const draggableComponent = {
     },
 
     mounted() {
-        this.noneFunctionalComponentMode =
-            this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase() &&
-            !this.getIsFunctional();
+        this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase() && !this.getIsFunctional();
         if (this.noneFunctionalComponentMode && this.transitionMode) {
             throw new Error(
                 `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${this.getTag()}`,
@@ -251,17 +231,11 @@ const draggableComponent = {
             return res;
         }, {});
 
-        const options = Object.assign(
-            {},
-            this.options,
-            attributes,
-            optionsAdded,
-            {
-                onMove: (evt, originalEvent) => {
-                    return this.onDragMove(evt, originalEvent);
-                },
+        const options = Object.assign({}, this.options, attributes, optionsAdded, {
+            onMove: (evt, originalEvent) => {
+                return this.onDragMove(evt, originalEvent);
             },
-        );
+        });
         !('draggable' in options) && (options.draggable = '>*');
         if (this.multiDrag) {
             options.multiDrag = true;
@@ -332,27 +306,17 @@ const draggableComponent = {
                 return this.$children[0].$slots.default;
             }
             const rawNodes = this.$slots.default;
-            return this.transitionMode
-                ? rawNodes[0].child.$slots.default
-                : rawNodes;
+            return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
         },
 
         computeIndexes() {
             this.$nextTick(() => {
-                this.visibleIndexes = computeIndexes(
-                    this.getChildrenNodes(),
-                    this.rootContainer.children,
-                    this.transitionMode,
-                    this.footerOffset,
-                );
+                this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.transitionMode, this.footerOffset);
             });
         },
 
         getUnderlyingVm(htmlElt) {
-            const index = computeVmIndex(
-                this.getChildrenNodes() || [],
-                htmlElt,
-            );
+            const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
             if (index === -1) {
                 //Edge case during move callback: related element might be
                 //an element different from collection
@@ -368,17 +332,8 @@ const draggableComponent = {
         },
 
         getUnderlyingPotencialDraggableComponent({ __vue__: vue }) {
-            if (
-                !vue ||
-                !vue.$options ||
-                !isTransitionName(vue.$options._componentTag)
-            ) {
-                if (
-                    !('realList' in vue) &&
-                    vue.$children.length === 1 &&
-                    'realList' in vue.$children[0]
-                )
-                    return vue.$children[0];
+            if (!vue || !vue.$options || !isTransitionName(vue.$options._componentTag)) {
+                if (!('realList' in vue) && vue.$children.length === 1 && 'realList' in vue.$children[0]) return vue.$children[0];
 
                 return vue;
             }
@@ -407,8 +362,7 @@ const draggableComponent = {
         },
 
         updatePosition(oldIndex, newIndex) {
-            const updatePosition = (list) =>
-                list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+            const updatePosition = (list) => list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
             this.alterList(updatePosition);
         },
 
@@ -431,9 +385,7 @@ const draggableComponent = {
         getVmIndex(domIndex) {
             const indexes = this.visibleIndexes;
             const numberIndexes = indexes.length;
-            return domIndex > numberIndexes - 1
-                ? numberIndexes
-                : indexes[domIndex];
+            return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
         },
 
         getComponent() {
@@ -467,9 +419,7 @@ const draggableComponent = {
 
         doDragStartList(evt) {
             this.context = this.getUnderlyingVmList(evt.items);
-            evt.item._underlying_vm_ = this.clone(
-                this.context.map((e) => e.element),
-            );
+            evt.item._underlying_vm_ = this.clone(this.context.map((e) => e.element));
             draggingElement = evt.item;
         },
 
@@ -532,11 +482,7 @@ const draggableComponent = {
 
         doDragRemoveList(evt) {
             evt.items.forEach((item, index) => {
-                insertNodeAt(
-                    this.rootContainer,
-                    item,
-                    evt.oldIndicies[index].index,
-                );
+                insertNodeAt(this.rootContainer, item, evt.oldIndicies[index].index);
             });
             if (evt.pullMode === 'clone') {
                 if (evt.clones) {
@@ -586,8 +532,7 @@ const draggableComponent = {
                 insertNodeAt(evt.from, item, c.index);
             });
             // eslint-disable-next-line prettier/prettier
-            const newIndexFrom =
-                this.getVmIndex(evt.newIndex) - evt.items.indexOf(evt.item);
+            const newIndexFrom = this.getVmIndex(evt.newIndex) - evt.items.indexOf(evt.item);
             const moved = this.context.map((item, index) => {
                 const oldIndex = item.index;
                 const newIndex = newIndexFrom + index;
@@ -607,24 +552,18 @@ const draggableComponent = {
 
         updateProperty(evt, propertyName) {
             // eslint-disable-next-line no-prototype-builtins
-            evt.hasOwnProperty(propertyName) &&
-                (evt[propertyName] += this.headerOffset);
+            evt.hasOwnProperty(propertyName) && (evt[propertyName] += this.headerOffset);
         },
 
         computeFutureIndex(relatedContext, evt) {
             if (!relatedContext.element) {
                 return 0;
             }
-            const domChildren = [...evt.to.children].filter(
-                (el) => el.style['display'] !== 'none',
-            );
+            const domChildren = [...evt.to.children].filter((el) => el.style['display'] !== 'none');
             const currentDOMIndex = domChildren.indexOf(evt.related);
-            const currentIndex =
-                relatedContext.component.getVmIndex(currentDOMIndex);
+            const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
             const draggedInList = domChildren.indexOf(draggingElement) !== -1;
-            return draggedInList || !evt.willInsertAfter
-                ? currentIndex
-                : currentIndex + 1;
+            return draggedInList || !evt.willInsertAfter ? currentIndex : currentIndex + 1;
         },
 
         onDragMove(evt, originalEvent) {

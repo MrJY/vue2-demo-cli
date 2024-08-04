@@ -1,16 +1,20 @@
 <template>
     <div class="app">
-        <List :border="true" v-model="list1" style="width: 400px; height: 100%">
+        <List :border="true" v-model="list1" style="width: 400px; height: 100%" class="source-list">
             <ListItem v-for="element in list1" :key="element.id">
-                <Checkbox v-model="element.checked">
+                <Checkbox v-model="element.checked" @on-change="list1Change">
                     {{ element.name }}
                 </Checkbox>
             </ListItem>
         </List>
-
-        <List :border="true" v-model="list2" style="width: 400px; height: 100%">
-            <ListItem v-for="element in list2" :key="element.id">
+        <List :border="true" v-model="list1" style="width: 400px; height: 100%" class="target-list">
+            <ListItem v-for="element in list1" :key="element.id" v-show="element.checked" style="width: 100%">
                 {{ element.name }}
+                <template slot="action">
+                    <li>
+                        <a href="">删除</a>
+                    </li>
+                </template>
             </ListItem>
         </List>
     </div>
@@ -41,46 +45,19 @@ export default {
                     checked: false,
                 },
             ],
-            list2: [
-                {
-                    name: '2-element1',
-                    id: 11,
-                    checked: false,
-                },
-                {
-                    name: '2-element2',
-                    id: 21,
-                    checked: false,
-                },
-                {
-                    name: '2-element3',
-                    id: 31,
-                    checked: false,
-                },
-                {
-                    name: '2-element4',
-                    id: 41,
-                    checked: false,
-                },
-            ],
         };
     },
     methods: {
-        log() {
-            console.log('----------');
+        list1Change(result) {
+            console.log(result);
         },
     },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app {
     display: flex;
-    gap: 10px;
-}
-
-.selected {
-    color: red !important;
-    background-color: rgba(255, 0, 0, 0.2) !important;
+    border: none;
 }
 </style>

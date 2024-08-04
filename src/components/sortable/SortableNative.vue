@@ -1,23 +1,13 @@
 <template>
     <div class="app">
-        <List
-            :border="true"
-            ref="list1"
-            v-model="list1"
-            style="width: 400px; height: 100%"
-        >
+        <List :border="true" ref="list1" v-model="list1" style="width: 400px; height: 100%">
             <ListItem v-for="element in list1" :key="element.id">
                 <Checkbox v-model="element.checked">
                     {{ element.name }}
                 </Checkbox>
             </ListItem>
         </List>
-        <List
-            :border="true"
-            ref="list2"
-            v-model="list2"
-            style="width: 400px; height: 100%"
-        >
+        <List :border="true" ref="list2" v-model="list2" style="width: 400px; height: 100%">
             <ListItem v-for="element in list2" :key="element.id">
                 <Checkbox v-model="element.checked">
                     {{ element.name }}
@@ -26,7 +16,7 @@
         </List>
     </div>
 </template>
-<script lang="ts">
+<script>
 // Complete SortableJS (with all plugins)
 import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
 
@@ -84,32 +74,26 @@ export default {
         this.$nextTick(() => {
             //console.log(this.$refs.list);
 
-            new Sortable(
-                this.$refs.list1.$el.querySelector('.ivu-list-items'),
-                {
-                    group: {
-                        name: 'shared',
-                    },
-                    multiDrag: true, //支持多条拖动
-                    selectedClass: 'selected', //选中项class名
-                    onEnd: function (evt) {
-                        console.log('结束拖动');
-                        console.log(evt);
-                        console.log(evt.oldIndex, '-------', evt.newIndex);
-                        console.log(evt.items[0]);
-                    },
+            new Sortable(this.$refs.list1.$el.querySelector('.ivu-list-items'), {
+                group: {
+                    name: 'shared',
                 },
-            );
-            new Sortable(
-                this.$refs.list2.$el.querySelector('.ivu-list-items'),
-                {
-                    group: {
-                        name: 'shared',
-                    },
-                    multiDrag: true, //支持多条拖动
-                    selectedClass: 'selected', //选中项class名
+                multiDrag: true, //支持多条拖动
+                selectedClass: 'selected', //选中项class名
+                onEnd: function (evt) {
+                    console.log('结束拖动');
+                    console.log(evt);
+                    console.log(evt.oldIndex, '-------', evt.newIndex);
+                    console.log(evt.items[0]);
                 },
-            );
+            });
+            new Sortable(this.$refs.list2.$el.querySelector('.ivu-list-items'), {
+                group: {
+                    name: 'shared',
+                },
+                multiDrag: true, //支持多条拖动
+                selectedClass: 'selected', //选中项class名
+            });
         });
     },
 };
