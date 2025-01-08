@@ -17,7 +17,7 @@
         </grid-item>
     </grid-layout>
 </template>
-<script>
+<script lang="ts">
 import VueGridLayout from 'vue-grid-layout';
 
 export default {
@@ -40,7 +40,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 .draggable-element {
     touch-action: none;
 }
