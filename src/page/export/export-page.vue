@@ -2,7 +2,7 @@
     <div style="width: 1000px; height: 100%; overflow-y: auto">
         <Button @click="exportPdf" style="position: sticky; top: 0; z-index: 999">exportPdf</Button>
         <div id="export-content">
-            <div style="display: flex; flex-direction: column; align-items: center">
+            <div class="module column" style="display: flex; flex-direction: column; align-items: center">
                 <p>《通信原理》</p>
                 <p>课程目标达成评价与分析报告</p>
                 <p>课程信息1</p>
@@ -20,33 +20,33 @@
             </div>
             <div class="module column">
                 <div style="line-height: 32px; background: aliceblue">一、课程目标与考核细则</div>
-                <div>
+                <div class="table">
                     <p>1.课程目标</p>
                     <Table border :columns="columns1" :data="data1"></Table>
                 </div>
-                <div>
+                <div class="table">
                     <p>1.课程目标</p>
                     <Table border :columns="columns1" :data="data1"></Table>
                 </div>
-                <div>
+                <div class="table">
                     <p>1.课程目标</p>
                     <Table border :columns="columns1" :data="data1"></Table>
                 </div>
-                <div>
+                <div class="table">
                     <p>1.课程目标</p>
                     <Table border :columns="columns1" :data="data1"></Table>
                 </div>
             </div>
             <div class="module column">
                 <div style="line-height: 32px; background: aliceblue">一、课程目标与考核细则</div>
-                <div>
+                <div class="table">
                     <p>1.课程目标</p>
                     <p>
                         说明：这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告
                     </p>
                     <Table border :columns="columns1" :data="data1"></Table>
                 </div>
-                <div>
+                <div class="svg">
                     <p>1.课程目标</p>
                     <p>
                         说明：这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告这是一份简单的报告
@@ -66,19 +66,19 @@
                     <p>课程达成度计算公式：55+66+77+88</p>
                     <Table :columns="columns14" :data="data5" border :span-method="handleSpan"></Table>
                 </div>
-                <div>
+                <div class="input">
                     <p>1.课程达成度</p>
                     <Input maxlength="100" show-word-limit type="textarea" :rows="6" placeholder="Enter something..." style="width: 100%" />
                 </div>
-                <div>
+                <div class="input">
                     <p>1.课程达成度</p>
                     <Input maxlength="100" show-word-limit type="textarea" :rows="6" placeholder="Enter something..." style="width: 100%" />
                 </div>
-                <div>
+                <div class="input">
                     <p>1.课程达成度</p>
                     <Input maxlength="100" show-word-limit type="textarea" :rows="6" placeholder="Enter something..." style="width: 100%" />
                 </div>
-                <div>
+                <div class="input">
                     <p>1.课程达成度</p>
                     <Input maxlength="100" show-word-limit type="textarea" :rows="6" placeholder="Enter something..." style="width: 100%" />
                 </div>
@@ -280,5 +280,9 @@ export default {
 .column {
     display: flex;
     flex-direction: column;
+}
+
+:deep(.ivu-table:before) {
+    height: 0;
 }
 </style>

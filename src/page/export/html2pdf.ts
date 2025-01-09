@@ -1,5 +1,6 @@
 import html2Canvas from 'html2canvas';
 import JsPDF, { jsPDFOptions } from 'jspdf';
+import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
 // 定义一个对象
 const pdfOperation: jsPDFOptions = {
@@ -18,6 +19,10 @@ const a4w = 210 - margins * 2;
 const a4h = 297 - margins * 2;
 
 function htmlPdf(dom: HTMLElement, title: string) {
+    debugger;
+    const position = a4w / dom.scrollWidth;
+    const positionHeight = a4h / position;
+    const element = getElement(dom, positionHeight);
     html2Canvas(dom).then((canvas) => {
         // 设置pdf格式：纵向，210mm*297mm
         const pdf = new JsPDF(pdfOperation);
@@ -52,6 +57,28 @@ function htmlPdf(dom: HTMLElement, title: string) {
         // 保存文件
         pdf.save(title + '.pdf');
     });
+}
+
+function getElement(dom: HTMLElement, height: number) {
+    // 获取指定高度位置处的dom元素
+    function findElement(element: HTMLElement, targetHeight: number): HTMLElement | null {
+        const rect = element.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        const bottom = rect.bottom + window.scrollY;
+
+        if (top <= targetHeight && targetHeight <= bottom) {
+            for (const child of element.children) {
+                const result = findElement(child as HTMLElement, targetHeight);
+                if (result) {
+                    return result;
+                }
+            }
+            return element;
+        }
+        return null;
+    }
+
+    return findElement(dom, height);
 }
 
 export default htmlPdf;
